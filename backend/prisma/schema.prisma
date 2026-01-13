@@ -8,3 +8,72 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model fornecedor {
+  idFornecedor       Int    @id @default(autoincrement())
+  cnpjcpf            String @unique
+  nome               String
+  endereco           String
+  telefone           String
+  tipoFornecimento   String
+  prazoEntrega       Int
+  email              String @unique
+}
+
+model produto {
+  idProduto    Int    @id @default(autoincrement())
+  descricao    String
+  preco        Float
+  dataEntrada  DateTime @default(now())
+  dataSaida    DateTime?
+  foto         String?
+  setorPreparo String
+  disponivel   Boolean @default(true)
+
+  alimento produtoAlimento?
+  bebida   produtoBebida?
+  cafe     produtoCafe?
+}
+
+model produtoAlimento {
+  idProdAli         Int      @id 
+  peso              Float
+  ingredientes      String
+  dataValidade      DateTime
+  classAlimentar    String
+  quantPorEmba      Int
+
+  produto   produto @relation(fields: [idProdAli], references: [idProduto])
+}
+
+model produtoBebida {
+  idProdBeb        Int      @id 
+  volume           Float
+  calorias         Int
+  GelOuQuente      String
+  acucar           Boolean
+  lactose          Boolean
+  ingredientes     String
+
+  produto   produto @relation(fields: [idProdBeb], references: [idProduto])
+}
+
+model produtoCafe {
+  idProdCafe    Int      @id 
+  tipoMoagem    String
+  tipoTorra     String
+  acidez        String
+  origem        String
+  tamEmbalagem  Int
+  tipoGrao      String
+
+  produto   produto @relation(fields: [idProdCafe], references: [idProduto])
+}
+
+model loja {
+  idLoja       Int    @id @default(autoincrement())
+  cnpj         String @unique
+  telefone     String
+  endereco     String
+}
+
+
